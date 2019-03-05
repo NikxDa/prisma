@@ -84,7 +84,7 @@ message GetRelatedNodesInput {
     required Header          header          = 1;
     required bytes           project_json    = 2;
     required string          model_name      = 3;
-    required RelationalField from_field      = 4;
+    required string          from_field      = 4;
     repeated GraphqlId       from_node_ids   = 5;
     required QueryArguments  query_arguments = 6;
     repeated SelectedField   selected_fields = 7;

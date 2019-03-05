@@ -43,6 +43,14 @@ pub unsafe extern "C" fn get_nodes(data: *mut u8, len: usize) -> *mut ProtoBufEn
 }
 
 #[no_mangle]
+pub unsafe extern "C" fn get_related_nodes(data: *mut u8, len: usize) -> *mut ProtoBufEnvelope {
+    let payload = slice::from_raw_parts_mut(data, len);
+    let response_payload = PBI.get_related_nodes(payload);
+
+    ProtoBufEnvelope::from(response_payload).into_boxed_ptr()
+}
+
+#[no_mangle]
 pub unsafe extern "C" fn destroy(buffer: *mut ProtoBufEnvelope) {
     Box::from_raw(buffer);
 }

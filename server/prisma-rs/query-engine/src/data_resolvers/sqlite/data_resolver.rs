@@ -8,8 +8,7 @@ impl DataResolver for Sqlite {
     fn select_nodes(&self, query: SelectQuery) -> PrismaResult<(Vec<Vec<PrismaValue>>, Vec<String>)> {
         let db_name = query.db_name;
         let query_ast = query.query_ast;
-        let fields = query.selected_fields.fields;
-        let field_names = query.selected_fields.names;
+        let selected_fields = query.selected_fields.columns().map(|column| match column);
 
         self.with_connection(&db_name, |conn| {
             let (query_sql, params) = dbg!(visitor::Sqlite::build(query_ast));
@@ -28,7 +27,7 @@ impl DataResolver for Sqlite {
                 nodes.push(node?);
             }
 
-            Ok(dbg!((nodes, field_names)))
+            Ok((nodes, field_names))
         })
     }
 }

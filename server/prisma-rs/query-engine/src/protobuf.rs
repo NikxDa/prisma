@@ -156,6 +156,33 @@ impl From<Vec<PrismaValue>> for Node {
     }
 }
 
+impl IntoSelectedFields for Vec<prisma::SelectedField> {
+    fn into_selected_fields(self, model: ModelRef, from_field: Option<Arc<RelationField>>) -> SelectedFields {
+        let fields = self.into_iter().fold(BTreeSet::new(), |mut acc, sf| {
+            match sf.field.unwrap() {
+                prisma::selected_field::Field::Scalar(field_name) => {
+                    let field = model.fields().find_from_scalar(&field_name).unwrap();
+
+                    acc.insert(SelectedField::Scalar(SelectedScalarField { field }));
+                }
+                prisma::selected_field::Field::Relational(rf) => {
+                    let field = model.fields().find_from_relation_fields(&rf.field).unwrap();
+                    let selected_fields = rf.selected_fields.into_selected_fields(model.clone());
+
+                    acc.insert(SelectedField::Relation(SelectedRelationField {
+                        field,
+                        selected_fields,
+                    }));
+                }
+            }
+
+            acc
+        });
+
+        SelectedFields::new(fields, from_field)
+    }
+}
+
 trait InputValidation {
     fn validate(&self) -> PrismaResult<()>;
 
