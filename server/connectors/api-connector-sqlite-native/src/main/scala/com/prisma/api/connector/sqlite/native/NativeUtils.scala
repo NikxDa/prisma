@@ -30,6 +30,19 @@ object NativeUtils {
     PrismaNode(idValue.asInstanceOf[IdGCValue], RootGCValue(rootMap.toMap))
   }
 
+  def transformRelatedNodes(node: (protocol.Node, Vector[String]), model: Model): Vector[PrismaNodeWithParent] = {
+//    val node     = readPrismaNode(rf.relatedModel_!, fields, rs)
+//    val parentId = rs.getParentId(parentModelAlias, rf.model.idField_!.typeIdentifier)
+//    PrismaNodeWithParent(parentId, node)
+
+    //    private def readPrismaNode(model: Model, fields: List[ScalarField], rs: ResultSet): PrismaNode = {
+    //    val data = fields.toVector.map(field => field.name -> rs.getGcValue(field.dbName, field.typeIdentifier))
+    //    PrismaNode(id = rs.getId(model), data = RootGCValue(data: _*), Some(model.name))
+    //  }
+
+    ???
+  }
+
   def toGcValue(value: protocol.ValueContainer.PrismaValue): GCValue = {
     value match {
       case PrismaValue.Empty                => NullGCValue
@@ -235,6 +248,4 @@ object NativeUtils {
   def toRelationalField(field: RelationField): protocol.RelationalField = {
     protocol.RelationalField(field.dbName, Seq())
   }
-
-  def transformRelatedNode()
 }
